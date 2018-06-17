@@ -1,12 +1,21 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import PropTypes from 'prop-types';
+
+const propTypes = {
+  data: PropTypes.array,
+  onPost: PropTypes.func
+}
+
+const defaultProps = {
+  data: [],
+  onPost: (data) => { console.error('post function not defined'); }
+}
 
 class FileUpload extends Component {
 
    constructor(props) {
     super(props);
       this.state = {
-        imgs: [],
         uploadStatus: false
       }
     this.handleUpload = this.handleUpload.bind(this);
@@ -15,37 +24,19 @@ class FileUpload extends Component {
   handleUpload(e){
     e.preventDefault();
     const files = this.uploadInput.files
-    const uploaders = Object.keys(files).map(key => {
-      // console.log(files[key].name)
-      const data = new FormData();
-      data.append('file', files[key]);
-      data.append('filename', files[key].name);
+    
+    Object.keys(files).map(key => {
+    
+        const data = new FormData();
+        data.append('file', files[key]);
+        data.append('filename', files[key].name);
 
-      return axios.post('http://localhost:8000/upload', data)
-        .then((res) => {
-          // state 변경시 무조건 setState 함수 사용하기 
-          // state 배열 변경시 spread연산자나 immutability helper 사용하기 
-          // 둘 이상의 태그를 배열에 추가할때는 div 태그로 묶어줘야 함
-          // 상태를 저장하기 위해(새로고침 후에도 남아있으려면) 각 주소를 추후에 
-          // redux로 보내서 액션을 통해 store에 주소 배열로 저장한다
-          // 이미지 주소를 배열에 추가함
-          this.setState({
-            imgs: [...this.state.imgs, 
-            <div key={key}>
-              <img src={`http://localhost:8000/${res.data.file}`} width="40%" alt="img"/><br/>
-            </div>
-            ]
-          })
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        return this.props.onPost(data).then(
+          () => {
+             console.log('upload done !!');
+          }
+        )
     })
-    // redux로 주소 배열을 액션으로 보냄 
-    axios.all(uploaders).then(() => {
-      console.log(this.state.imgs);
-      console.log("upload done!!")
-    });
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -57,6 +48,16 @@ class FileUpload extends Component {
   }
   
   render() {
+    console.log(this.props.data);
+    const mapToComponents = data => {
+      return data.map( (file, key) => {
+        return (
+             <div key={key}>
+                <img src={`http://localhost:8000/${file}`} width="40%" alt="img"/><br/>
+              </div>
+        )
+      })
+    }
     return(
       <div className="container">
         <form onSubmit={this.handleUpload}>
@@ -64,11 +65,14 @@ class FileUpload extends Component {
             <input className="form-control"  ref={(ref) => { this.uploadInput = ref; }} type="file" multiple/>
           </div>
           <button className="btn btn-success" type="submit">Upload</button>
-        </form>
-        {this.state.imgs }
+        </form>     
+        { mapToComponents(this.props.data)}
       </div>
     )
   }
 }
+
+FileUpload.propTypes = propTypes;
+FileUpload.defaultProps = defaultProps;
 
 export default FileUpload;
