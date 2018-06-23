@@ -14,7 +14,7 @@ export function imgPostRequest(data){
         // 이미지 주소를 배열에 추가함
 		return axios.post('http://localhost:8000/api/img/upload', data)
 		.then((response) => {
-			dispatch(imgPostSuccess(response.data.file));
+			dispatch(imgPostSuccess());
 		}).catch((error) => {
 			dispatch(imgPostFailure(error));
 		})
@@ -27,10 +27,9 @@ export function imgPost(){
 	}
 }
 
-export function imgPostSuccess(file){
+export function imgPostSuccess(){
 	return {
-		type: types.IMG_POST_SUCCESS,
-		file
+		type: types.IMG_POST_SUCCESS
 	}
 }
 
@@ -38,5 +37,38 @@ export function imgPostFailure(error){
 	return {
 		type: types.IMG_POST_FAILURE,
 		error
+	}
+}
+
+// IMG LIST
+export function imgListRequest(){
+	return (dispatch) => {
+		dispatch(imgList());
+
+		return axios.get('http://localhost:8000/api/img/upload')
+		.then((response) => {
+			dispatch(imgListSuccess(response.data));
+		}).catch((error) => {
+			dispatch(imgListFailure());
+		})
+	}
+}
+
+export function imgList(){
+	return {
+		type: types.IMG_LIST
+	}
+}
+
+export function imgListSuccess(data){
+	return {
+		type: types.IMG_LIST_SUCCESS,
+		data
+	}
+}
+
+export function imgListFailure(){
+	return {
+		type: types.IMG_LIST_FAILURE
 	}
 }

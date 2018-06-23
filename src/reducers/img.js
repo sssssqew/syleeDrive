@@ -5,8 +5,13 @@ const initialState = {
 	post: {
 		// status: 'INIT',
 		// error: -1,
-		files: []
-	}
+		// files: []
+	},
+	list: {
+		// status: 'INIT',
+		data: [],
+		// isLast: false
+	},
 }
 
 // 아무런 액션도 없으면 초기상태가 반환된다
@@ -26,7 +31,7 @@ export default function img(state = initialState, action){
 			return update(state, {
 				post: {
 					// status: { $set: 'SUCCESS' },
-					files: { $push: [action.file] }
+					// files: { $push: [action.file] }
 				}
 			});
 		case types.IMG_POST_FAILURE:
@@ -34,6 +39,25 @@ export default function img(state = initialState, action){
 				post: {
 					// status: { $set: 'FAILURE' },
 					// error: { $set: action.error }
+				}
+			});
+		case types.IMG_LIST:
+			return update(state, {
+				list: {
+					// status: { $set: 'WAITING' }
+				}
+			});
+		case types.IMG_LIST_SUCCESS:
+			return update(state, {
+				list: {
+					// status: { $set: 'SUCCESS' },
+					data: { $set: action.data }
+				}
+			});
+		case types.IMG_LIST_FAILURE:
+			return update(state, {
+				list: {
+					status: { $set: 'FAILURE' }
 				}
 			});
 		default:

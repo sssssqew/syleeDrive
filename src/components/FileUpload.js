@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 const propTypes = {
   data: PropTypes.array,
-  onPost: PropTypes.func
+  onPost: PropTypes.func,
+  onList: PropTypes.func
 }
 
 const defaultProps = {
   data: [],
-  onPost: (data) => { console.error('post function not defined'); }
+  onPost: (data) => { console.error('post function not defined'); },
+  onList: (data) => { console.error('list function not defined'); }
 }
 
 class FileUpload extends Component {
@@ -22,7 +25,7 @@ class FileUpload extends Component {
     e.preventDefault();
     const files = this.uploadInput.files
     
-    Object.keys(files).map(key => {
+    const uploaders = Object.keys(files).map(key => {
     
         const data = new FormData();
         data.append('file', files[key]);
@@ -33,13 +36,21 @@ class FileUpload extends Component {
              console.log('upload done !!');
           }
         )
-    })
+    });
+
+    // Once all the files are uploaded 
+    axios.all(uploaders).then(() => {
+      return this.props.onList().then(
+        console.log('upload completed...')
+      )
+    });
   }
 
   componentDidMount(){
-    console.log('componentDidMount');  
+    console.log('upload mount ?');  
     // 새로고침 할때마다 DB에서 파일 리스트 가져오기
     // 가져와서 리덕스 상태 변경하기
+
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -58,10 +69,10 @@ class FileUpload extends Component {
   render() {
     console.log('render...')
     const mapToComponents = data => {
-      return data.map( (file, key) => {
+      return data.map( (img, key) => {
         return (
              <div key={key}>
-                <img src={`http://localhost:8000/${file}`} width="40%" alt="img"/><br/>
+                <img src={`http://localhost:8000/${img.path}`} width="40%" alt="img"/><br/>
               </div>
         )
       })

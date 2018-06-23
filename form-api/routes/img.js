@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 const router = express.Router();
 
+// UPLOAD IMG
 router.post('/upload', (req, res, next) => {
 	console.log('upload...')
   let imageFile = req.files.file;
@@ -21,9 +22,19 @@ router.post('/upload', (req, res, next) => {
 
     img.save(function(err){
     	if(err) throw err;
-    	return res.json({file: `public/${req.body.filename}`});
+    	return res.json({ loadStatus: 'success' });
     })
   });
 })
+
+// GET IMG LIST 
+router.get('/upload', (req, res) => {
+	Img.find()
+	.sort({"_id": -1})
+	.exec((err, imgs) => {
+		if(err) throw err;
+		res.json(imgs);
+	});
+});
 
 module.exports = router;
