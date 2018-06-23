@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+/form-api/node_modules
+/form-api/public
 
 # testing
 /coverage

@@ -15,9 +15,6 @@ class FileUpload extends Component {
 
    constructor(props) {
     super(props);
-      this.state = {
-        uploadStatus: false
-      }
     this.handleUpload = this.handleUpload.bind(this);
   }
 
@@ -39,6 +36,17 @@ class FileUpload extends Component {
     })
   }
 
+  componentDidMount(){
+    console.log('componentDidMount');  
+    // 새로고침 할때마다 DB에서 파일 리스트 가져오기
+    // 가져와서 리덕스 상태 변경하기
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+        let update = JSON.stringify(this.props.data) !== JSON.stringify(nextProps.data);
+        return update;
+    }
+
   componentWillUpdate(nextProps, nextState) {
     console.log('componentWillUpdate');
   }
@@ -48,7 +56,7 @@ class FileUpload extends Component {
   }
   
   render() {
-    console.log(this.props.data);
+    console.log('render...')
     const mapToComponents = data => {
       return data.map( (file, key) => {
         return (

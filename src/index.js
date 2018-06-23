@@ -13,10 +13,10 @@ import thunk from 'redux-thunk';
 
 const store = createStore(reducers, applyMiddleware(thunk));
 
-console.log(store.getState());
+// console.log(store.getState());
 
-// store가 변경될때마다 실행됨 
-store.subscribe( () => console.log("changed: " , store.getState()));
+// // store가 변경될때마다 실행됨 
+// store.subscribe( () => console.log("changed: " , store.getState()));
 
 const routes = (
 	<Provider store={store}>
