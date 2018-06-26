@@ -4,12 +4,7 @@ export default class UploadStatus extends React.Component {
 
 	render() {
 		let loaded = this.props.loaded;
-		let zeros = '';
-
-		if (loaded >= 0 && loaded < 10) zeros = '00';
-		else if (loaded < 100) zeros = '0';
-
-		let progress = zeros + loaded.toString();
+		let progress = loaded.toString();
 		let progressBar = {width: loaded.toString() + '%'};
 
 		return(

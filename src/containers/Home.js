@@ -23,9 +23,10 @@ class Home extends Component {
         return this.props.imgPostRequest(data, callback).then(
             () => {
                 if(this.props.postStatus === "SUCCESS"){
-                    window.Materialize.toast("Success !!", 2000, 'bottom');
+                    window.Materialize.toast("Success !!", 1000, 'bottom');
                 }else{
-                    window.Materialize.toast("Duplicated", 2000, 'bottom');
+                    window.Materialize.toast("Duplicated", 1000, 'bottom');
+                    return "duplicate"
                 }
             }
         )

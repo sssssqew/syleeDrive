@@ -26,18 +26,22 @@ class FileUpload extends Component {
     }
     this.abortUpload = this.abortUpload.bind(this);
     this.handleUpload = this.handleUpload.bind(this);
+    this.initialize = this.initialize.bind(this);
   }
 
   abortUpload(e) {
     e.stopPropagation();
     e.preventDefault();
-    // source.cancel();
     this.setState({progress: 0});
     console.log('Uploading aborted.');
   }
 
-  handleUpload(files){
+  initialize(){
     this.setState({progress: 0});
+  }
+
+  handleUpload(files){
+    let loaded = 0;
     
     const uploaders = Object.keys(files).map(key => {
     
@@ -48,18 +52,21 @@ class FileUpload extends Component {
         const callback = {
           onUploadProgress: (e) => {
               if (e.lengthComputable) {
-                let loaded = Math.round((e.loaded / e.total) * 100);
-                // this.setState({progress: loaded});
-                console.log(`progress[${key}]: ${loaded}`);
-                this.setState({progress: loaded});
+                loaded = loaded + parseInt(e.loaded / e.total, 10);
+                this.setState({ progress: parseInt(loaded*100/files.length, 10) })
+                console.log(this.state.progress);
               }
             }
          }
 
         return this.props.onPost(data, callback).then(
-          () => {
+          (s) => {
+             if(s === "duplicate"){
+                console.log("haha, duplicated~")
+                this.setState({ progress: 0 })
+              }
              console.log('upload done !!');
-          }
+            }
         )
     });
 
@@ -72,7 +79,7 @@ class FileUpload extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState){
-        let update = JSON.stringify(this.props.data) !== JSON.stringify(nextProps.data);
+        let update = JSON.stringify(this.props.data) !== JSON.stringify(nextProps.data) || this.state !== nextState;
         return update;
     }
 
@@ -89,23 +96,27 @@ class FileUpload extends Component {
    
     const dropzone = {
       width: "100%",
-      height: "100%",
+      height: "100vh",
+      padding: "1%",
+      backgroundColor: '#F7F9F9',
+      overflow: "auto"
     }
     const dropzoneActive = {
-      backgroundColor: "#EBF5FB"
+      opacity: "0.4",
+      backgroundColor: 'black',
     }
     return(
       <div> 
       <UploadStatus loaded={this.state.progress} onUploadAbort={this.abortUpload} />
         <Dropzone 
+            id="drop"
             multiple  
             accept="image/*, video/*, mp3/*"
             disableClick
-            name="Dropzone"
             onDrop={this.handleUpload}
+            onDragEnter={this.initialize}
             style={dropzone}
             activeStyle={dropzoneActive}>
-        <p>DropZone</p>
         <ImgList data={this.props.data}/>
         </Dropzone>
       </div>
