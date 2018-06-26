@@ -3,12 +3,12 @@ import update from 'react-addons-update';
 
 const initialState = {
 	post: {
-		// status: 'INIT',
+		status: 'INIT',
 		// error: -1,
 		// files: []
 	},
 	list: {
-		// status: 'INIT',
+		status: 'INIT',
 		data: [],
 		// isLast: false
 	},
@@ -23,34 +23,34 @@ export default function img(state = initialState, action){
 		case types.IMG_POST:
 			return update(state, {
 				post: {
-					// status: { $set: 'WAITING' },
+					status: { $set: 'WAITING' },
 					// error: { $set: -1 }
 				}
 			});
 		case types.IMG_POST_SUCCESS:
 			return update(state, {
 				post: {
-					// status: { $set: 'SUCCESS' },
+					status: { $set: 'SUCCESS' },
 					// files: { $push: [action.file] }
 				}
 			});
 		case types.IMG_POST_FAILURE:
 			return update(state, {
 				post: {
-					// status: { $set: 'FAILURE' },
+					status: { $set: 'FAILURE' },
 					// error: { $set: action.error }
 				}
 			});
 		case types.IMG_LIST:
 			return update(state, {
 				list: {
-					// status: { $set: 'WAITING' }
+					status: { $set: 'WAITING' }
 				}
 			});
 		case types.IMG_LIST_SUCCESS:
 			return update(state, {
 				list: {
-					// status: { $set: 'SUCCESS' },
+					status: { $set: 'SUCCESS' },
 					data: { $set: action.data }
 				}
 			});

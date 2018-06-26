@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import Dropzone from 'react-dropzone';
+import ImgList from './ImgList';
 
 const propTypes = {
   data: PropTypes.array,
@@ -21,9 +23,7 @@ class FileUpload extends Component {
     this.handleUpload = this.handleUpload.bind(this);
   }
 
-  handleUpload(e){
-    e.preventDefault();
-    const files = this.uploadInput.files
+  handleUpload(files){
     
     const uploaders = Object.keys(files).map(key => {
     
@@ -46,13 +46,6 @@ class FileUpload extends Component {
     });
   }
 
-  componentDidMount(){
-    console.log('upload mount ?');  
-    // 새로고침 할때마다 DB에서 파일 리스트 가져오기
-    // 가져와서 리덕스 상태 변경하기
-
-  }
-
   shouldComponentUpdate(nextProps, nextState){
         let update = JSON.stringify(this.props.data) !== JSON.stringify(nextProps.data);
         return update;
@@ -68,24 +61,29 @@ class FileUpload extends Component {
   
   render() {
     console.log('render...')
-    const mapToComponents = data => {
-      return data.map( (img, key) => {
-        return (
-             <div key={key}>
-                <img src={`http://localhost:8000/${img.path}`} width="40%" alt="img"/><br/>
-              </div>
-        )
-      })
+   
+    const dropzone = {
+      width: "100%",
+      height: "100%",
+    }
+    const dropzoneActive = {
+      backgroundColor: "#EBF5FB"
     }
     return(
-      <div className="container">
-        <form onSubmit={this.handleUpload}>
-          <div className="form-group">
-            <input className="form-control"  ref={(ref) => { this.uploadInput = ref; }} type="file" multiple/>
-          </div>
-          <button className="btn btn-success" type="submit">Upload</button>
-        </form>     
-        { mapToComponents(this.props.data)}
+      <div> 
+        <Dropzone 
+            multiple  
+            accept="image/*, video/*, mp3/*"
+            disableClick
+            name="Dropzone"
+            onDrop={this.handleUpload}
+            style={dropzone}
+            activeStyle={dropzoneActive}>
+        <p>DropZone</p>
+        <div>
+        <ImgList data={this.props.data}/>
+        </div>
+        </Dropzone>
       </div>
     )
   }

@@ -6,7 +6,6 @@ const router = express.Router();
 
 // UPLOAD IMG
 router.post('/upload', (req, res, next) => {
-	console.log('upload...')
   let imageFile = req.files.file;
 
   imageFile.mv(`${__dirname}/../public/${req.body.filename}`, function(err) {
@@ -14,15 +13,22 @@ router.post('/upload', (req, res, next) => {
     	console.log(err);
       return res.status(500).send(err);
     }
-    let img = new Img({
-		category: 'img',
-		name: req.body.filename,
-		path: `public/${req.body.filename}`,
-	});
 
-    img.save(function(err){
-    	if(err) throw err;
-    	return res.json({ loadStatus: 'success' });
+    Img.findOne({name: req.body.filename}, (err, img) => {
+      if(err) throw err;
+      if(!img){
+        let img = new Img({
+          category: 'img',
+          name: req.body.filename,
+          path: `public/${req.body.filename}`,
+        });
+        img.save(function(err){
+          if(err) throw err;
+          return res.json({ loadStatus: 'success' });
+        })
+      }else{
+        return res.status(400).json({ error: 'DUPLICATE' })
+      }
     })
   });
 })

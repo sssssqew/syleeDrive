@@ -23,7 +23,9 @@ class Home extends Component {
         return this.props.imgPostRequest(data).then(
             () => {
                 if(this.props.postStatus === "SUCCESS"){
-                    console.log("upload success !!")
+                    window.Materialize.toast("Success !!", 2000, 'bottom');
+                }else{
+                    window.Materialize.toast("Duplicated", 2000, 'bottom');
                 }
             }
         )
@@ -43,12 +45,9 @@ class Home extends Component {
         return update;
     }
 
-    
-
     render() {
         return (
-            <div>
-            	<h2> File upload </h2>
+            <div className="container">
 	        <FileUpload 
                     data={this.props.imgData}
                     onPost={this.handlePost}

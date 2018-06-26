@@ -12,11 +12,15 @@ export function imgPostRequest(data){
         // 상태를 저장하기 위해(새로고침 후에도 남아있으려면) 각 주소를 추후에 
         // redux로 보내서 액션을 통해 store에 주소 배열로 저장한다
         // 이미지 주소를 배열에 추가함
-		return axios.post('http://localhost:8000/api/img/upload', data)
+		return axios.post('http://localhost:8000/api/img/upload', data, {
+		    onUploadProgress: progressEvent => {
+		      console.log(progressEvent.loaded / progressEvent.total)
+		    }
+		 })
 		.then((response) => {
 			dispatch(imgPostSuccess());
 		}).catch((error) => {
-			dispatch(imgPostFailure(error));
+			dispatch(imgPostFailure());
 		})
 	}		
 }
@@ -33,10 +37,9 @@ export function imgPostSuccess(){
 	}
 }
 
-export function imgPostFailure(error){
+export function imgPostFailure(){
 	return {
-		type: types.IMG_POST_FAILURE,
-		error
+		type: types.IMG_POST_FAILURE
 	}
 }
 
