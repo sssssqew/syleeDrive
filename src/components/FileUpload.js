@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import Dropzone from 'react-dropzone';
 import ImgList from './ImgList';
+import UploadStatus from './UploadStatus';
 
 const propTypes = {
   data: PropTypes.array,
@@ -12,7 +13,7 @@ const propTypes = {
 
 const defaultProps = {
   data: [],
-  onPost: (data) => { console.error('post function not defined'); },
+  onPost: (data, callback) => { console.error('post function not defined'); },
   onList: (data) => { console.error('list function not defined'); }
 }
 
@@ -20,10 +21,23 @@ class FileUpload extends Component {
 
    constructor(props) {
     super(props);
+    this.state = {
+      progress: 0
+    }
+    this.abortUpload = this.abortUpload.bind(this);
     this.handleUpload = this.handleUpload.bind(this);
   }
 
+  abortUpload(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    // source.cancel();
+    this.setState({progress: 0});
+    console.log('Uploading aborted.');
+  }
+
   handleUpload(files){
+    this.setState({progress: 0});
     
     const uploaders = Object.keys(files).map(key => {
     
@@ -31,7 +45,18 @@ class FileUpload extends Component {
         data.append('file', files[key]);
         data.append('filename', files[key].name);
 
-        return this.props.onPost(data).then(
+        const callback = {
+          onUploadProgress: (e) => {
+              if (e.lengthComputable) {
+                let loaded = Math.round((e.loaded / e.total) * 100);
+                // this.setState({progress: loaded});
+                console.log(`progress[${key}]: ${loaded}`);
+                this.setState({progress: loaded});
+              }
+            }
+         }
+
+        return this.props.onPost(data, callback).then(
           () => {
              console.log('upload done !!');
           }
@@ -71,6 +96,7 @@ class FileUpload extends Component {
     }
     return(
       <div> 
+      <UploadStatus loaded={this.state.progress} onUploadAbort={this.abortUpload} />
         <Dropzone 
             multiple  
             accept="image/*, video/*, mp3/*"
@@ -80,9 +106,7 @@ class FileUpload extends Component {
             style={dropzone}
             activeStyle={dropzoneActive}>
         <p>DropZone</p>
-        <div>
         <ImgList data={this.props.data}/>
-        </div>
         </Dropzone>
       </div>
     )

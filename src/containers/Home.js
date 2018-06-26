@@ -19,8 +19,8 @@ class Home extends Component {
         this.loadImg = this.loadImg.bind(this);
     }
 
-    handlePost(data){
-        return this.props.imgPostRequest(data).then(
+    handlePost(data, callback){
+        return this.props.imgPostRequest(data, callback).then(
             () => {
                 if(this.props.postStatus === "SUCCESS"){
                     window.Materialize.toast("Success !!", 2000, 'bottom');
@@ -70,8 +70,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        imgPostRequest: (data) => {
-            return dispatch(imgPostRequest(data));
+        imgPostRequest: (data, callback) => {
+            return dispatch(imgPostRequest(data, callback));
         },
         imgListRequest: () => {
             return dispatch(imgListRequest());

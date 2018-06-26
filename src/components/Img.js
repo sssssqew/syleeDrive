@@ -16,15 +16,13 @@ class Img extends Component {
     // }
 
     render() {
-    	const style = {
-			width: "40%",
-			height: "300px",
-			borderRadius: "10px"
-    	}
+   //  	const style = {
+			// width: "30%",
+			// height: "auto",
+			// borderRadius: "10px"
+   //  	}
         return (
-            <div>
-              <img src={`http://localhost:8000/${this.props.img.path}`} style={style} alt="img"/><br/>
-            </div>
+          <img src={`http://localhost:8000/${this.props.img.path}`} alt="img"/>
         );
     }
 }

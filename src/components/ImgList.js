@@ -27,7 +27,9 @@ class ImgList extends Component {
 	    }
         return (
             <div>
+            <section id="photos">
             	{ mapToComponents(this.props.data)}
+            </section>
             </div>
         );
     }
