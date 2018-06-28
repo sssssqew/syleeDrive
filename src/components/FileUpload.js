@@ -87,7 +87,8 @@ class FileUpload extends Component {
       )
     });
   }
-
+  
+  // state 변경시 업데이트는 progress 바의 상태 변화를 확인하기 위함이다
   shouldComponentUpdate(nextProps, nextState){
         let update = JSON.stringify(this.props.data) !== JSON.stringify(nextProps.data) || this.state !== nextState;
         return update;
