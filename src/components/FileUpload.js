@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import Dropzone from 'react-dropzone';
-import ImgList from './ImgList';
+import FileList from './FileList';
 import UploadStatus from './UploadStatus';
 
 const propTypes = {
@@ -22,7 +22,8 @@ class FileUpload extends Component {
    constructor(props) {
     super(props);
     this.state = {
-      progress: 0
+      progress: 0,
+      successCnt: 0
     }
     this.abortUpload = this.abortUpload.bind(this);
     this.handleUpload = this.handleUpload.bind(this);
@@ -32,29 +33,32 @@ class FileUpload extends Component {
   abortUpload(e) {
     e.stopPropagation();
     e.preventDefault();
-    this.setState({progress: 0});
+    this.setState({progress: 0, successCnt: 0});
     console.log('Uploading aborted.');
   }
 
   initialize(){
-    this.setState({progress: 0});
+    this.setState({progress: 0, successCnt: 0});
   }
 
   handleUpload(files){
     let loaded = 0;
+    let cnt = 0;
     
     const uploaders = Object.keys(files).map(key => {
-    
+        const filetype = files[key].type.split('/')[0];
+
         const data = new FormData();
         data.append('file', files[key]);
         data.append('filename', files[key].name);
+        data.append('filetype', filetype);
 
         const callback = {
           onUploadProgress: (e) => {
               if (e.lengthComputable) {
                 loaded = loaded + parseInt(e.loaded / e.total, 10);
                 this.setState({ progress: parseInt(loaded*100/files.length, 10) })
-                console.log(this.state.progress);
+                // console.log(this.state.progress);
               }
             }
          }
@@ -64,8 +68,10 @@ class FileUpload extends Component {
              if(s === "duplicate"){
                 console.log("haha, duplicated~")
                 this.setState({ progress: 0 })
+              }else{
+                cnt = cnt + 1;
               }
-             console.log('upload done !!');
+             // console.log('upload done !!');
             }
         )
     });
@@ -73,7 +79,11 @@ class FileUpload extends Component {
     // Once all the files are uploaded 
     axios.all(uploaders).then(() => {
       return this.props.onList().then(
-        console.log('upload completed...')
+        () => {
+          console.log('upload completed...')
+         console.log(`success/fail: (${cnt})/(${files.length-cnt})`)
+         this.setState({ successCnt: cnt})
+        }
       )
     });
   }
@@ -107,17 +117,17 @@ class FileUpload extends Component {
     }
     return(
       <div> 
-      <UploadStatus loaded={this.state.progress} onUploadAbort={this.abortUpload} />
+      <UploadStatus loaded={this.state.progress} onUploadAbort={this.abortUpload} success={this.state.successCnt}/>
         <Dropzone 
             id="drop"
             multiple  
-            accept="image/*, video/*, mp3/*"
+            accept="image/*, video/*, audio/*"
             disableClick
             onDrop={this.handleUpload}
             onDragEnter={this.initialize}
             style={dropzone}
             activeStyle={dropzoneActive}>
-        <ImgList data={this.props.data}/>
+        <FileList data={this.props.data}/>
         </Dropzone>
       </div>
     )

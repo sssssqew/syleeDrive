@@ -18,43 +18,43 @@ const initialState = {
 // 즉 새로고침(F5)하면 초기상태가 반환된다 
 // set : 이전값과 다른 경우에만 컴포넌트 업데이트 발생
 // push: 이전값과 무조건 다르므로 update 발생함 
-export default function img(state = initialState, action){
+export default function file(state = initialState, action){
 	switch(action.type){
-		case types.IMG_POST:
+		case types.FILE_UPLOAD:
 			return update(state, {
 				post: {
 					status: { $set: 'WAITING' },
 					// error: { $set: -1 }
 				}
 			});
-		case types.IMG_POST_SUCCESS:
+		case types.FILE_UPLOAD_SUCCESS:
 			return update(state, {
 				post: {
 					status: { $set: 'SUCCESS' },
 					// files: { $push: [action.file] }
 				}
 			});
-		case types.IMG_POST_FAILURE:
+		case types.FILE_UPLOAD_FAILURE:
 			return update(state, {
 				post: {
 					status: { $set: 'FAILURE' },
 					// error: { $set: action.error }
 				}
 			});
-		case types.IMG_LIST:
+		case types.FILE_LIST:
 			return update(state, {
 				list: {
 					status: { $set: 'WAITING' }
 				}
 			});
-		case types.IMG_LIST_SUCCESS:
+		case types.FILE_LIST_SUCCESS:
 			return update(state, {
 				list: {
 					status: { $set: 'SUCCESS' },
 					data: { $set: action.data }
 				}
 			});
-		case types.IMG_LIST_FAILURE:
+		case types.FILE_LIST_FAILURE:
 			return update(state, {
 				list: {
 					status: { $set: 'FAILURE' }

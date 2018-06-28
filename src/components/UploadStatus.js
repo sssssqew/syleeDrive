@@ -11,6 +11,7 @@ export default class UploadStatus extends React.Component {
 			<table id="progressTable">
 				<tbody>
 					<tr>
+						<th><b><span id="progress">Loaded({this.props.success})</span></b></th>
 						<th><b><span id="progress">{progress}</span>%</b></th>
 						<td>
 							<div className="progressBar">

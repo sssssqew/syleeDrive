@@ -2,9 +2,9 @@ import * as types from './ActionTypes';
 import axios from 'axios';
 
 //IMG POST 
-export function imgPostRequest(data, callback){
+export function FileUploadRequest(data, callback){
 	return (dispatch) => {
-		dispatch(imgPost());
+		dispatch(fileUpload());
 		
 		// state 변경시 무조건 setState 함수 사용하기 
         // state 배열 변경시 spread연산자나 immutability helper 사용하기 
@@ -12,62 +12,62 @@ export function imgPostRequest(data, callback){
         // 상태를 저장하기 위해(새로고침 후에도 남아있으려면) 각 주소를 추후에 
         // redux로 보내서 액션을 통해 store에 주소 배열로 저장한다
         // 이미지 주소를 배열에 추가함
-		return axios.post('http://localhost:8000/api/img/upload', data, callback)
+		return axios.post('http://localhost:8000/api/files/upload', data, callback)
 		.then((response) => {
-			dispatch(imgPostSuccess());
+			dispatch(fileUploadSuccess());
 		}).catch((error) => {
-			dispatch(imgPostFailure());
+			dispatch(fileUploadFailure());
 		})
 	}		
 }
 
-export function imgPost(){
+export function fileUpload(){
 	return {
-		type: types.IMG_POST
+		type: types.FILE_UPLOAD
 	}
 }
 
-export function imgPostSuccess(){
+export function fileUploadSuccess(){
 	return {
-		type: types.IMG_POST_SUCCESS
+		type: types.FILE_UPLOAD_SUCCESS
 	}
 }
 
-export function imgPostFailure(){
+export function fileUploadFailure(){
 	return {
-		type: types.IMG_POST_FAILURE
+		type: types.FILE_UPLOAD_FAILURE
 	}
 }
 
 // IMG LIST
-export function imgListRequest(){
+export function FileListRequest(){
 	return (dispatch) => {
-		dispatch(imgList());
+		dispatch(fileList());
 
-		return axios.get('http://localhost:8000/api/img/upload')
+		return axios.get('http://localhost:8000/api/files/upload')
 		.then((response) => {
-			dispatch(imgListSuccess(response.data));
+			dispatch(fileListSuccess(response.data));
 		}).catch((error) => {
-			dispatch(imgListFailure());
+			dispatch(fileListFailure());
 		})
 	}
 }
 
-export function imgList(){
+export function fileList(){
 	return {
-		type: types.IMG_LIST
+		type: types.FILE_LIST
 	}
 }
 
-export function imgListSuccess(data){
+export function fileListSuccess(data){
 	return {
-		type: types.IMG_LIST_SUCCESS,
+		type: types.FILE_LIST_SUCCESS,
 		data
 	}
 }
 
-export function imgListFailure(){
+export function fileListFailure(){
 	return {
-		type: types.IMG_LIST_FAILURE
+		type: types.FILE_LIST_FAILURE
 	}
 }

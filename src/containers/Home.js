@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import FileUpload from 'components/FileUpload';
 import { connect } from 'react-redux';
-import { imgPostRequest, imgListRequest } from 'actions/img';
+import { FileUploadRequest, FileListRequest } from 'actions/file';
 
 // const propTypes = {
 // 	number: PropTypes.number
@@ -15,12 +15,12 @@ import { imgPostRequest, imgListRequest } from 'actions/img';
 class Home extends Component {
     constructor(props) {
         super(props);
-        this.handlePost = this.handlePost.bind(this);
-        this.loadImg = this.loadImg.bind(this);
+        this.uploadFiles = this.uploadFiles.bind(this);
+        this.loadFiles = this.loadFiles.bind(this);
     }
 
-    handlePost(data, callback){
-        return this.props.imgPostRequest(data, callback).then(
+    uploadFiles(data, callback){
+        return this.props.FileUploadRequest(data, callback).then(
             () => {
                 if(this.props.postStatus === "SUCCESS"){
                     window.Materialize.toast("Success !!", 1000, 'bottom');
@@ -32,17 +32,17 @@ class Home extends Component {
         )
     }
 
-    loadImg(){
-        return this.props.imgListRequest();
+    loadFiles(){
+        return this.props.FileListRequest();
     }
 
     componentDidMount(){
         console.log('home mount...')
-        return this.props.imgListRequest();
+        return this.props.FileListRequest();
     }
 
     shouldComponentUpdate(nextProps, nextState){
-        let update = JSON.stringify(this.props.imgData) !== JSON.stringify(nextProps.imgData);
+        let update = JSON.stringify(this.props.data) !== JSON.stringify(nextProps.data);
         return update;
     }
 
@@ -50,9 +50,9 @@ class Home extends Component {
         return (
             <div className="container">
 	        <FileUpload 
-                    data={this.props.imgData}
-                    onPost={this.handlePost}
-                    onList={this.loadImg}/>
+                    data={this.props.data}
+                    onPost={this.uploadFiles}
+                    onList={this.loadFiles}/>
             </div>
         );
     }
@@ -61,21 +61,20 @@ class Home extends Component {
 const mapStateToProps = (state) => {
     return {
         
-        postStatus: state.img.post.status,
-        files: state.img.post.files,
-        listStatus: state.img.list.status,
-        imgData: state.img.list.data,
+        postStatus: state.file.post.status,
+        listStatus: state.file.list.status,
+        data: state.file.list.data,
         
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        imgPostRequest: (data, callback) => {
-            return dispatch(imgPostRequest(data, callback));
+        FileUploadRequest: (data, callback) => {
+            return dispatch(FileUploadRequest(data, callback));
         },
-        imgListRequest: () => {
-            return dispatch(imgListRequest());
+        FileListRequest: () => {
+            return dispatch(FileListRequest());
         }
     }
 }

@@ -1,8 +1,8 @@
 const express = require('express');
-const img = require('./img');
+const file = require('./file');
 
 const router = express.Router();
-/* GET users listing. */
-router.use('/img', img);
+
+router.use('/files', file);
 
 module.exports = router;

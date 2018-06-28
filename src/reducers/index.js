@@ -1,9 +1,9 @@
-import img from './img';
+import file from './file';
 
 import { combineReducers } from 'redux';
 
 const reducers = combineReducers({
-	img
+	file
 });
 
 export default reducers;
