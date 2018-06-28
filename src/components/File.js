@@ -43,7 +43,7 @@ class File extends Component {
         // 이전에 플레이 중이던 자식 컴포넌트를 찾아서 플레이를 중지한다
         if(this.props.current !== -1 && this.props.keyId === this.props.current){
             console.log(`File No.${this.props.current} stopped`);
-            this.setState({ playing: !this.state.playing })
+            this.setState({ playing: false })
         }
         // console.log(this.props.current); // prev key
         // console.log(nextProps.current); // next key
@@ -89,7 +89,7 @@ class File extends Component {
                                             url={src}
                                             onClick={this.handleClick}>
                                         </ReactPlayer>
-                                        {btn}
+                                        
                                     </div>);
     			break;
     		case 'image':
