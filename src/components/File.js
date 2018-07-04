@@ -40,18 +40,27 @@ class File extends Component {
     // 무한루프에 빠지지 않도록 한다 
     // 모든 자식 컴포넌트들은 부모의 변경된 state를 props로 전달받는다
     componentWillReceiveProps(nextProps) {
-        // 이전에 플레이 중이던 자식 컴포넌트를 찾아서 플레이를 중지한다
-        if(this.props.current !== -1 && this.props.keyId === this.props.current){
-            console.log(`File No.${this.props.current} stopped`);
-            this.setState({ playing: false })
+        if(this.props.current !== nextProps.current){
+            // 이전에 플레이 중이던 자식 컴포넌트를 찾아서 플레이를 중지한다
+            if(this.props.current !== -1){
+                if(this.props.keyId === this.props.current){
+                    console.log(`File No.${this.props.current} stopped`);
+                    this.setState({ playing: false })
+                }
+            }
+        }else{
+            // // 내림차순 정렬 
+            // if(this.props.current !== -1){
+            //     if(this.props.keyId === this.props.current){
+            //         console.log(`File No.${this.props.current} stopped`);
+            //         this.setState({ playing: false })
+            //     }
+            // }
+            // 오름차순 정렬
+            console.log('uploading^^')
+            console.log('prev: ', this.props.current); // prev key
+            console.log('next: ', nextProps.current); // next key
         }
-        // console.log(this.props.current); // prev key
-        // console.log(nextProps.current); // next key
-    }
-    // 플레이가 중지된 자식 컴포넌트만 렌더링하기 위함이다
-    shouldComponentUpdate(nextProps, nextState){
-        let update = JSON.stringify(this.state) !== JSON.stringify(nextState);
-        return update;
     }
 
     render() {
@@ -65,6 +74,7 @@ class File extends Component {
             </a>
         )
        
+       // console.log(this.props.file.name)
     	switch(this.props.file.category){
     		case 'audio':
     			tag = (
@@ -97,7 +107,7 @@ class File extends Component {
                                 <div>
                                    <img 
                                         src={src} 
-                                        alt={this.props.file.name}/> 
+                                        alt={this.props.file.cover}/> 
                                 </div>);
     			break;
     		default:
