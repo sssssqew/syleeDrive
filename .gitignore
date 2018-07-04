@@ -1,9 +1,7 @@
-# See https://help.github.com/ignore-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
-/form-api/node_modules
-/form-api/public
+/uploader/node_modules
+/uploader/public
 
 # testing
 /coverage
